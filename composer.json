@@ -1,6 +1,10 @@
 {
     "name": "teepluss/datatables",
-    "description": "",
+    "description": "Laravel 4 Datatables",
+    "keywords": ["laravel", "laravel4", "datatables", "datagrid"],
+    "homepage": "https://github.com/teepluss/laravel4-datatables.git",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Teepluss",
