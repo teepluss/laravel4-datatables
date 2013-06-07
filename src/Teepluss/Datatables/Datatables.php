@@ -35,6 +35,24 @@ class Datatables
 	protected	$result_array		= array();
 	protected	$result_array_r		= array();
 
+	/**
+	 * The attributes that should be hidden for arrays.
+	 *
+	 * @var array
+	 */
+	protected	$hidden = array();
+
+	/**
+	 * Set the hidden attributes for the model.
+	 *
+	 * @param  array  $hidden
+	 * @return void
+	 */
+	public function setHidden(array $hidden)
+	{
+		$this->hidden = $hidden;
+		return $this;
+	}
 
 	/**
 	 *	Gets query and returns instance of class
@@ -76,6 +94,10 @@ class Datatables
 		if($this->query_type == 'eloquent')
 		{
 			$this->result_object = $this->query->get();
+			$hidden = $this->hidden;
+			$this->result_object->map(function($model) use ($hidden) {
+				$model->setHidden($hidden);
+			});
 			$this->result_array = $this->result_object->toArray();
 		}
 		else
@@ -362,7 +384,8 @@ class Datatables
 
 				for ($i=0,$c=count($copy_this->columns);$i<$c;$i++)
 				{
-					if (Input::get('bSearchable_'.$i) == "true")
+					//Edit check "(" for check function in query - Jo
+					if (Input::get('bSearchable_'.$i) == "true" && strpos($copy_this->columns[$i], '(') == FALSE)
 					{
 						$column = explode(' as ',strtolower($copy_this->columns[$i]));
 						$column = array_shift($column);
@@ -445,8 +468,14 @@ class Datatables
 
 	private function count()
 	{
+		//Get columns to temp var.
+		$columns = $this->query->getQuery()->columns;
+
 		$copy_query = $this->query;
 		$this->count_all = $copy_query->count();
+
+		//Put columns back.
+		$this->query->select($columns);
 	}
 
 
