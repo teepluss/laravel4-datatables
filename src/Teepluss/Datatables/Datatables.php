@@ -36,25 +36,6 @@ class Datatables
 	protected	$result_array_r		= array();
 
 	/**
-	 * The attributes that should be hidden for arrays.
-	 *
-	 * @var array
-	 */
-	protected	$hidden = array();
-
-	/**
-	 * Set the hidden attributes for the model.
-	 *
-	 * @param  array  $hidden
-	 * @return void
-	 */
-	public function setHidden(array $hidden)
-	{
-		$this->hidden = $hidden;
-		return $this;
-	}
-
-	/**
 	 *	Gets query and returns instance of class
 	 *
 	 *	@return null
@@ -94,10 +75,6 @@ class Datatables
 		if($this->query_type == 'eloquent')
 		{
 			$this->result_object = $this->query->get();
-			$hidden = $this->hidden;
-			$this->result_object->map(function($model) use ($hidden) {
-				$model->setHidden($hidden);
-			});
 			$this->result_array = $this->result_object->toArray();
 		}
 		else
